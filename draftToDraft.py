@@ -116,13 +116,17 @@ PANEL_SAVE_DRAFT_Y = 738
 PANEL_CANCEL_X     = 1221
 PANEL_CANCEL_Y     = 738
 
+# Back arrow (top-left of page) — for returning to collectibles list after save
+BACK_ARROW_X = 25
+BACK_ARROW_Y = 71
+
 # ─────────────────────────────────────────────
 # File manager dialog coords (unchanged)
 # ─────────────────────────────────────────────
 FM_FILETYPE_DROP_X = 1316
-FM_FILETYPE_DROP_Y = 696
+FM_FILETYPE_DROP_Y = 698
 FM_ALL_FILES_X     = 1316
-FM_ALL_FILES_Y     = 740
+FM_ALL_FILES_Y     = 743
 FM_GRID_START_X    = 262
 FM_GRID_START_Y    = 207
 FM_THUMB_W         = 122
@@ -319,7 +323,11 @@ def process_one_edit(index, row_on_page, title, category, rarity):
     # 11. Click Save as Draft (fixed bottom coord)
     click(PANEL_SAVE_DRAFT_X, PANEL_SAVE_DRAFT_Y, "Save as Draft", delay=3.5)
 
-    print(f"  ✅  #{index+1} saved as draft!")
+    # 12. Click back arrow TWICE to return to collectibles list
+    click(BACK_ARROW_X, BACK_ARROW_Y, "Back ← (1st)", delay=1.5)
+    click(BACK_ARROW_X, BACK_ARROW_Y, "Back ← (2nd)", delay=2.0)
+
+    print(f"  ✅  #{index+1} saved as draft and back to list!")
 
 
 # ════════════════════════════════════════════════════════
