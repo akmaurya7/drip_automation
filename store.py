@@ -258,7 +258,7 @@ sys.stdout.flush()
 # ── Q1: Total collectibles ──────────────────────────────
 print()
 sys.stdout.flush()
-total = ask_int("How many total collectibles to schedule", 1, 550)
+total = ask_int("How many total collectibles to schedule", 1, 800)
 
 # ── Q2: Mode ───────────────────────────────────────────
 print("""

@@ -30,15 +30,15 @@ screen_w, screen_h = pyautogui.size()
 # IntimoArt #327(299), #326(339), #325(379), #324(419),
 # #323(459), #322(500), #321(540), #320(580), #319(620), #318(660)
 # ─────────────────────────────────────────────
-ROW_Y_POSITIONS = [299, 339, 379, 419, 459, 500, 540, 580, 620, 660]
+ROW_Y_POSITIONS = [329, 369, 409, 449, 489, 530, 570, 610, 650, 690]
 ROWS_PER_PAGE   = len(ROW_Y_POSITIONS)
 
 # 3-dot (⋯) button — far right column
 THREE_DOT_X = 1108
 
 # Next page ">" button
-NEXT_PAGE_X = 899
-NEXT_PAGE_Y = 721
+NEXT_PAGE_X = 898
+NEXT_PAGE_Y = 749
 
 # ─────────────────────────────────────────────
 # DROPDOWN SCAN REGION — where the popup menu appears
@@ -333,6 +333,7 @@ else:
 print()
 
 total = ask_int("How many total collectibles to process", 1, 800)
+start_row = ask_int("Start from which collectible on the page", 1, 10)
 mode  = ask_category_mode()
 
 chosen_category = None
@@ -360,6 +361,7 @@ print("\n" + "─"*60)
 print("  SCHEDULE SUMMARY")
 print("─"*60)
 print(f"  Total collectibles : {total}")
+print(f"  Start from row     : {start_row}")
 print(f"  Mode               : {'SAME ('+chosen_category+')' if mode=='1' else 'CYCLE' if mode=='2' else 'ALL CATEGORIES EACH'}")
 print(f"  Pages to process   : {pages_needed}")
 print("─"*60)
@@ -389,16 +391,24 @@ print("  GO!\n")
 # Run — page by page
 processed    = 0
 current_page = 0
+first_page   = True
 
 while processed < total:
-    rows_this_page = min(ROWS_PER_PAGE, total - processed)
+    # On first page, calculate available rows after start position
+    if first_page:
+        available_rows = ROWS_PER_PAGE - (start_row - 1)
+        rows_this_page = min(available_rows, total - processed)
+        start_row_slot = start_row - 1
+    else:
+        rows_this_page = min(ROWS_PER_PAGE, total - processed)
+        start_row_slot = 0
 
     print(f"\n{'▓'*60}")
-    print(f"  PAGE {current_page + 1}  —  processing rows 1-{rows_this_page}")
+    print(f"  PAGE {current_page + 1}  —  processing rows {start_row_slot + 1}-{start_row_slot + rows_this_page}")
     print(f"{'▓'*60}")
 
-    for row_slot in range(rows_this_page):
-        global_index = processed + row_slot
+    for row_slot in range(start_row_slot, start_row_slot + rows_this_page):
+        global_index = processed + row_slot - start_row_slot
         row_y        = ROW_Y_POSITIONS[row_slot]
         cats         = assignments[global_index]
 
@@ -410,6 +420,7 @@ while processed < total:
                 process_one(global_index, row_y, cat)
 
     processed += rows_this_page
+    first_page = False
 
     if processed < total:
         go_next_page()
